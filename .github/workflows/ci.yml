@@ -74,6 +74,14 @@ jobs:
           mkdir foo4; cd foo4
           leanpkg init foo4
           leanpkg build lib
+      - name: Version Test
+        shell: bash
+        run: |
+          RUST_BACKTRACE=1 target/${{ matrix.target }}/release/elan-init -y
+          # not created on Windows
+          [ -f ~/.elan/env ] && source ~/.elan/env || export PATH=$PATH:~/.elan/bin
+          source ./tests/test.sh
+        if: matrix.os != 'windows-latest'
       - name: Package
         shell: bash
         run: |
